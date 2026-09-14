@@ -71,6 +71,13 @@ func CoreClient() (*corev1.CoreV1Client, error) {
 	return coreClient, coreClientError
 }
 
+// this setup allows for fake client overrides in unit tests
+var CoreV1Client = getCoreV1Client
+
+func getCoreV1Client() (corev1.CoreV1Interface, error) {
+	return CoreClient()
+}
+
 func CoreClientFromConfig(config *rest.Config) (*corev1.CoreV1Client, error) {
 	client, err := corev1.NewForConfig(config)
 	if err != nil {

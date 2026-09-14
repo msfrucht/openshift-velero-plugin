@@ -18,6 +18,7 @@ import (
 	"github.com/konveyor/openshift-velero-plugin/velero-plugins/nonadmin"
 	"github.com/konveyor/openshift-velero-plugin/velero-plugins/persistentvolume"
 	"github.com/konveyor/openshift-velero-plugin/velero-plugins/pod"
+	"github.com/konveyor/openshift-velero-plugin/velero-plugins/proxy"
 	"github.com/konveyor/openshift-velero-plugin/velero-plugins/pvc"
 	"github.com/konveyor/openshift-velero-plugin/velero-plugins/replicaset"
 	"github.com/konveyor/openshift-velero-plugin/velero-plugins/replicationcontroller"
@@ -74,6 +75,7 @@ func main() {
 		RegisterRestoreItemAction("openshift.io/25-configmap-restore-plugin", newConfigMapRestorePlugin).
 		RegisterRestoreItemAction("openshift.io/26-nonadmin-restore-plugin", newNonAdminRestorePlugin).
 		RegisterRestoreItemAction("openshift.io/27-rbac-role-bindings-restore-plugin", newRBACRoleBindingRestorePlugin).
+		RegisterBackupItemAction("openshift.io/28-proxy-backup-plugin", newProxyBackupPlugin).
 		Serve()
 }
 
@@ -239,4 +241,8 @@ func newNonAdminRestorePlugin(logger logrus.FieldLogger) (interface{}, error) {
 
 func newRBACRoleBindingRestorePlugin(logger logrus.FieldLogger) (interface{}, error) {
 	return &rolebindings.K8sRestorePlugin{Log: logger}, nil
+}
+
+func newProxyBackupPlugin(logger logrus.FieldLogger) (interface{}, error) {
+	return &proxy.BackupPlugin{Log: logger}, nil
 }
